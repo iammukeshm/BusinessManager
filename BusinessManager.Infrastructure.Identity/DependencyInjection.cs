@@ -18,7 +18,6 @@ namespace BusinessManager.Infrastructure.Identity
     {
         public static IServiceCollection ConfigureIdentity(this IServiceCollection services, IConfiguration configuration, IWebHostEnvironment environment)
         {
-
             // Identity
             services.AddDbContext<IdentityContext>(options =>
                 options.UseSqlServer(

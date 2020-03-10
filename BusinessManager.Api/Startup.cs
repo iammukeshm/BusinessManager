@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Mime;
 using System.Threading.Tasks;
 using BusinessManager.Api.Common;
 using BusinessManager.Api.Services;
@@ -9,14 +10,18 @@ using BusinessManager.Application.Interfaces;
 using BusinessManager.Domain.Settings;
 using BusinessManager.Infrastructure.Identity;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using Newtonsoft.Json;
 
 namespace BusinessManager.Api
 {
@@ -35,6 +40,7 @@ namespace BusinessManager.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddHealthChecks().AddSqlServer(_configuration["ConnectionStrings:DefaultConnection"]);
             // Load From AppSettings
             services.Configure<EmailSettings>(_configuration.GetSection("Email"));
             services.Configure<ClientAppSettings>(_configuration.GetSection("ClientApp"));
@@ -119,6 +125,25 @@ namespace BusinessManager.Api
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            app.UseHealthChecks("/health",
+                new HealthCheckOptions
+                {
+                    ResponseWriter = async (context, report) =>
+                    {
+                        var result = JsonConvert.SerializeObject(
+                            new
+                            {
+                                status = report.Status.ToString(),
+                                errors = report.Entries.Select(e => new
+                                {
+                                    key = e.Key,
+                                    value = Enum.GetName(typeof(HealthStatus), e.Value.Status)
+                                })
+                            });
+                        context.Response.ContentType = MediaTypeNames.Application.Json;
+                        await context.Response.WriteAsync(result);
+                    }
+                });
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -151,6 +176,7 @@ namespace BusinessManager.Api
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapHealthChecks("api_health_check");
             });
         }
     }
