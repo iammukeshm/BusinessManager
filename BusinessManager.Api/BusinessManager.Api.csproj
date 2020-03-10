@@ -34,6 +34,7 @@
     <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="5.0.0" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\BusinessManager.Application\BusinessManager.Application.csproj" />
     <ProjectReference Include="..\BusinessManager.Domain\BusinessManager.Domain.csproj" />
     <ProjectReference Include="..\BusinessManager.Infrastructure.Identity\BusinessManager.Infrastructure.Identity.csproj" />
     <ProjectReference Include="..\BusinessManager.Infrastructure.Persistence\BusinessManager.Infrastructure.Persistence.csproj" />

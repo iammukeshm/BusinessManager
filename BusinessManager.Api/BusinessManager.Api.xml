@@ -4,5 +4,17 @@
         <name>BusinessManager.Api</name>
     </assembly>
     <members>
+        <member name="M:BusinessManager.Api.Controllers.AccountController.LoginAsync(BusinessManager.Application.Features.Account.Commands.LoginUserCommand)">
+            <summary>
+            Generates a Bearer Token for the User.
+            </summary>
+            <remarks>
+            Note that the key is a GUID and not an integer.
+            </remarks>
+            <param name="command">Request</param>
+            <returns>New Created Todo Item</returns>
+            <response code="201">Returns the newly created item</response>
+            <response code="400">If the item is null</response>
+        </member>
     </members>
 </doc>
