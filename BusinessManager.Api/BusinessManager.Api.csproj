@@ -38,8 +38,5 @@
     <ProjectReference Include="..\BusinessManager.Infrastructure.Identity\BusinessManager.Infrastructure.Identity.csproj" />
     <ProjectReference Include="..\BusinessManager.Infrastructure.Persistence\BusinessManager.Infrastructure.Persistence.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Areas\" />
-  </ItemGroup>
 
 </Project>
