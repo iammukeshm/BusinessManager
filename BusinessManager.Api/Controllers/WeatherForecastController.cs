@@ -27,6 +27,7 @@ namespace BusinessManager.Api.Controllers
         public IEnumerable<WeatherForecast> Get()
         {
             var rng = new Random();
+            throw new Exception("Error1994");
             return Enumerable.Range(1, 5).Select(index => new WeatherForecast
             {
                 Date = DateTime.Now.AddDays(index),
